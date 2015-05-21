@@ -222,5 +222,84 @@ head(clus)
 
 
 
+```{r, eval = FALSE}
+setwd("/Users/Cody_2/git.repos/BIS180L_web/data/")
+genes <- read.table("voom_transform_brassica.csv", sep = ",", header = TRUE)
+DE_genes <- read.table("DEgenes_GxE.csv", sep = ",")
+DE_gene_names <- rownames(DE_genes)
 
+GxE_counts <- as.data.frame(genes[DE_gene_names,])
+head(GxE_counts)
+plot(genes)[1]
+head(genes)
+plot()
+genes_cor <- t(genes)
+genes_cor <- cor(t(GxE_counts))
+dim(genes_cor)
+min(genes_cor)
+max(genes_cor)
+mean(genes_cor)
+
+hist(genes_cor[upper.tri(genes_cor)])
+genes_cor
+head(genes_cor)[,1:10]
+head(genes_cor)[1:10]
+tail(genes_cor)[,1:10]
+adjcent.z=abs(genes_cor) > 0.90
+diag(adjcent.z)=0  ## genes do not connect themselves in the network
+rownames(adjcent.z)=rownames(genes_cor)
+colnames(adjcent.z)=colnames(genes_cor)
+sum(adjcent.z)/2 ## 2155 edges
+
+
+### fishers-z transformation (to make the sample correlation more comparable), 
+
+
+n=48 ### this is the sample size 
+z.s <- sqrt(n-3)*0.5*log((1+genes_cor)/(1-genes_cor))
+summary(z.s[upper.tri(z.s)])
+hist(z.s[upper.tri(z.s)])
+head(z.s)
+?qnorm
+
+
+
+?edge.connectivity
+?barabasi.game
+g <- barabasi.game(20, m=1)
+plot(g)
+g2 <- barabasi.game(20, m=5)
+edge.connectivity(g2)
+plot(g2)
+
+edge.connectivity(g, 100, 1)
+edge.connectivity(g2, 100, 1)
+edge.disjoint.paths(g2, 100, 1)
+
+g <- erdos.renyi.game(50, 5/50)
+g <- as.directed(g)
+g <- induced.subgraph(g, subcomponent(g, 1))
+graph.adhesion(g)
+plot(g)
+
+
+
+### cut off 
+thre.z = qnorm(0.999999999999999995)  ## normal quanitle 
+thre.z
+adjcent.z=abs(z.s)>11  ## symmetric ajacency matrix: 1: there is an edge; 0 : there is no edge 
+diag(adjcent.z)=0  ## genes do not connect themselves in the network
+rownames(adjcent.z)=rownames(genes_cor)
+colnames(adjcent.z)=colnames(genes_cor)
+sum(adjcent.z)/2 ## 2155 edges
+index=rowSums(adjcent.z)>0
+weight.adjcent.z=adjcent.z[index,index]
+head(weight.adjcent.z)
+
+library(igraph)
+g.temp=graph.adjacency(weight.adjcent.z, mode="undirected", diag=FALSE)
+plot(g.temp)
+community.leading=leading.eigenvector.community(g.temp)
+community.leading
+```
 
