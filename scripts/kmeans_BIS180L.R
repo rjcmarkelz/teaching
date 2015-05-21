@@ -219,39 +219,58 @@ clus <- as.data.frame(fit$cluster)
 str(clus)
 names(clus) <- paste("cluster")
 head(clus)
+setwd("/Users/Cody_2/Box Sync/brassica_ein")
+setwd("/Users/Cody_2/git.repos/BIS180L_web/data/")
+genes2 <- read.table("GH_merged_v1.5_mapping.tsv", sep = "\t", header = TRUE)
+head(genes2)
+
 
 
 
 ```{r, eval = FALSE}
-setwd("/Users/Cody_2/git.repos/BIS180L_web/data/")
+
+
+#found the culpret libraries driving that weird response
 genes <- read.table("voom_transform_brassica.csv", sep = ",", header = TRUE)
 DE_genes <- read.table("DEgenes_GxE.csv", sep = ",")
 DE_gene_names <- rownames(DE_genes)
 
+
+head(genes)
+lib_names <- names(genes)
+lib_names
+#drop these columns
+# 38, 42, 46
+genes <- genes[,-c(38,42,46)] 
+
 GxE_counts <- as.data.frame(genes[DE_gene_names,])
 head(GxE_counts)
-plot(genes)[1]
-head(genes)
-plot()
-genes_cor <- t(genes)
 genes_cor <- cor(t(GxE_counts))
 dim(genes_cor)
 min(genes_cor)
 max(genes_cor)
 mean(genes_cor)
+median(genes_cor)
+
 
 hist(genes_cor[upper.tri(genes_cor)])
 genes_cor
 head(genes_cor)[,1:10]
 head(genes_cor)[1:10]
 tail(genes_cor)[,1:10]
-adjcent.z=abs(genes_cor) > 0.90
+adjcent.z=abs(genes_cor) > 0.80
 diag(adjcent.z)=0  ## genes do not connect themselves in the network
 rownames(adjcent.z)=rownames(genes_cor)
 colnames(adjcent.z)=colnames(genes_cor)
-sum(adjcent.z)/2 ## 2155 edges
+sum(adjcent.z)/2 ##  1251
 
 
+
+
+
+
+
+#####yasu code
 ### fishers-z transformation (to make the sample correlation more comparable), 
 
 
