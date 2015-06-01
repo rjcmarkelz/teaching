@@ -1,0 +1,11 @@
+## Question X (some point value)
+Load the following dataset: final_network.RData
+Answer the following questions, show your code and the plots.
+
+__a.__ Using the igraph library, plot the gene network. How many major gene clusters do you see? Generally describe the pattern(s) you observe.
+
+__b.__ What is the average path distance in this small gene network?
+
+__c.__ What is the shortest pathway distance between Gene 6 and Gene 77? Graph it.
+
+__d.__ How dense is this network?

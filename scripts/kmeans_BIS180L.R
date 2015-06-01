@@ -264,9 +264,10 @@ rownames(adjcent.z)=rownames(genes_cor)
 colnames(adjcent.z)=colnames(genes_cor)
 sum(adjcent.z)/2 ##  1251
 
-
-
-
+?get.shortest.paths
+V(gene_graph85)$name$Bra011961
+path.length.hist (gene_graph85, directed = FALSE)
+average.path.length(gene_graph85)
 
 
 

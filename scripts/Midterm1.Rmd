@@ -1,0 +1,187 @@
+# BIS180L Midterm
+# __Spring, 2015__  
+# __Available May 1, 2015__  
+# __Due May 7, 1:10 PM__  
+
+# __60 points total__
+
+# __Student Name:__
+
+# __Student ID:__
+
+# # Limitations
+# This exam is open book, open notes, open web
+# __HOWEVER__
+# You CANNOT discuss the questions with any person or entity.  
+# You CANNOT request help from any person, online forum, listserv, chat room, or other entity, etc.
+
+# You CAN ask Kristen or Professor Maloof for help or clarification.
+
+# # Instructions
+
+# 1. Work by adding your answers to this .Rmd file
+# 2. For all questions provide any code that you used to answer them formatted as a code block.
+# 3. For the R questions the code should run and embed the answers when you knit this file.
+# 4. When you are ready to turn in the exam, knit an html file, add both the .Rmd an the .html file and push to your repository.  You do not need to turn in a PDF.
+
+# ## Question 0 (2 points)
+
+# Throughout this assignment, you code should have helpful comments and appropriate variable names.
+
+# ## Question 1 (16 points)
+
+# Your professor has entered into a contract with a biotech company to study a secret gene and puts you on the project.  The company will not reveal the identity of the gene or even the source organism.
+
+# Being the curious scientist that you are, you decide to ignore the consequences (lawsuits) and to sequence it.  The sequence is available in the file "Mystery1.fa"
+
+# You hypothesize that the sequence has come from a model organism.  
+
+# __a.__ Did the gene come from _Arabidopsis_, _C. elegans_,  _Drosophila_ or some other organism?  If you think it came from some other organism is that organism likely a plant or animal? Explain the reasoning behind your conclusion.
+
+# __b.__ List the best protein match for each organism (if there is one).  Are these matches significant?  How did you decide significance?
+
+# __c.__  For each organism do you think there is a single ortholog?  Why or why not?
+
+# __d.__ Which program did you use to answer this question?  Why?  What advantages and disadvantages does it have over other choices?
+
+# ## Question 2 (6 points)
+
+# __a.__ Unpack the `test.tar.gz` tarball (located in the exam directory)
+
+# __b.__ The for loop below is meant to print the contents of each `test` file, but it doesn't work.  Fix it so that it runs.  What is the message from the files?
+
+#     testFiles=`ls test*.txt`
+
+#     for file in testFiles
+#         do
+#             cat $file
+#         done
+
+# __c.__ If the first line in part b is written as:
+
+#     testFiles=`ls test*`
+
+# Will this also work the same way?  Why or why not? Which version preferred?
+
+# ## Question 3 (4 points)
+
+# The EMBOSS suite contains a program called `preg` that lets you search
+# for protein patterns using regular expressions. Suppose you want to find
+# how how often `IAN` occurs in the worm proteome.  You would type
+
+#     preg -sequence flypep -pattern "IAN" -outfile out
+
+# The pattern below matches C2H2 Zn-finger proteins.
+
+#     C.{2,4}C.{3}[LIVMFYWC].{8}H.{3,5}H
+
+# __a.__ How many fly proteins have this pattern? 
+
+# __b.__ What is the average number of Zn-fingers per protein?
+
+# ## Question 4 (6 points)
+
+# Perform the same Zn-finger search against the shuffled fly proteome.
+
+# __a.__ How many proteins have this pattern, and what is the average number of Zn-fingers per protein?
+
+# __b.__ Explain why you think the shuffled sequence is similar/different from the real sequence with respect to the C2H2 Zn-finger pattern.
+
+# ## Question 5 (5 points)
+
+# __a.__ Describe three advantages to using a version control system like Git.
+
+# __b.__ Describe two things that you can do to make your code more reproducible and understandable.
+
+# ## Question 6 (4 points)
+
+# Download the [`fms.csv.gx` file](http://jnmaloof.github.io/BIS180L_web/data/fms.csv.gz) from the course website.
+
+# The file "fms.csv" contains a subset of data from a study examining determinants of muscle size and response to training in college students.
+# * The first row contains column headers.
+# * The first column "id" is the subject number of the individual being studied
+# * Each row represents the data from one person
+# * Columns 2 through 226 contain SNP genotypes in a number of candidate genes
+# * Columns 227 - 232 Contain information about the individual being studied. Of note
+#   * `Gender`
+#   * `Age`
+#   * `Race`
+# * The remaining columns are various physiological parameters.  Of note:
+#   * `NDRM.CH` : Percent change in muscle mass in the non-dominant arm
+#   * `DRM.CH` : Percent change in muscle mass in the dominant arm.
+  
+# __a.__ Load the file into R
+  
+# __b.__ Create a plot to examine the relationship between gender and change in muscle mass in the non-dominant arm.
+
+# ## Question 7 (6 points)
+
+# __a.__ What is the mean change in muscle mass in the non-dominant arm for each gender?
+
+# __b.__ Does gender have a _statistically significant_ effect on change in muscle mass in the non-dominant arm? How do you know?
+
+# ## Question 8 (11 points)
+
+# __a.__ Make and interpret an MDS plot to examine the relationship between ethnicity and population structure.
+
+# __b.__ How many potential population groups do you see? 
+
+# __c.__ Is there an obvious correspondence with ethnicity? How do you know? Show your code.
+
+library(DREAM4)
+
+library(GenomicRanges)
+data(dream4_100_01)
+names(assays(dream4_100_01))
+expressionData <- assays(dream4_100_01)$simulated
+names(exptData(dream4_010_01))
+goldStandardMatrix <- exptData(dream4_100_01)$goldStandardAdjacencyMatrix
+expressionData
+
+str(goldStandardMatrix)
+
+library(igraph)
+
+cities_graph2 <- graph.adjacency(goldStandardMatrix, mode = "undirected")
+plot.igraph(cities_graph2)
+
+comps <- clusters(cities_graph2)$membership 
+colbar <- rainbow(max(comps)+1)                                   #define colors
+V(cities_graph2)$color <- colbar[comps+1]                          #assign colors to nodes
+plot(cities_graph2, layout = layout.fruchterman.reingold, vertex.size = 6, vertex.label = NA)
+
+graph.density(cities_graph2)
+average.path.length(cities_graph2)
+distMatrix <- shortest.paths(cities_graph2, v = V(cities_graph2), to = V(cities_graph2))
+head(distMatrix)
+
+
+pl <- get.shortest.paths(cities_graph2, 6, 77)$vpath[[1]]
+V(cities_graph2)[pl]$color <- paste("green")          # define node color
+E(cities_graph2)$color <- paste("grey")               # define default edge color
+E(cities_graph2, path = pl)$color <- paste("blue")    # define edge color
+E(cities_graph2, path = pl)$width <- 10               # define edge width
+plot(cities_graph2, layout = layout.fruchterman.reingold, vertex.size = 6, vertex.label = NA)
+
+# shortest distance between G6 and Gene77
+
+write.table(goldStandardMatrix, "final_exam_gene_network.csv", sep = ",")
+goldStandardMatrix2 <- read.table("final_exam_gene_network.csv", sep = ",", header = TRUE)
+str(goldStandardMatrix2)
+
+save(final_network, file = "final_network.RData")
+final_network <- as.data.frame(goldStandardMatrix)
+final_network
+
+head(final_network)
+
+## Question X (some point value)
+
+# __a.__ Using the igraph library, plot the gene network. How many major gene clusters to you see? Generally describe the pattern(s) you observe.
+
+# __b.__ What is the average path distance in this small gene network?
+
+# __c.__ What is the shortest pathway distance between Gene 6 and Gene 77? Graph it.
+
+# __d.__ How dense is this network?
+
