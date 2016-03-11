@@ -140,9 +140,10 @@ expressionData
 
 str(goldStandardMatrix)
 
+
 library(igraph)
 
-cities_graph2 <- graph.adjacency(goldStandardMatrix, mode = "undirected")
+cities_graph2 <- graph.adjacency(final_network, mode = "undirected")
 plot.igraph(cities_graph2)
 
 comps <- clusters(cities_graph2)$membership 
@@ -169,6 +170,8 @@ write.table(goldStandardMatrix, "final_exam_gene_network.csv", sep = ",")
 goldStandardMatrix2 <- read.table("final_exam_gene_network.csv", sep = ",", header = TRUE)
 str(goldStandardMatrix2)
 
+
+final_network <- goldStandardMatrix
 save(final_network, file = "final_network.RData")
 final_network <- as.data.frame(goldStandardMatrix)
 final_network
@@ -177,11 +180,12 @@ head(final_network)
 
 ## Question X (some point value)
 
-# __a.__ Using the igraph library, plot the gene network. How many major gene clusters to you see? Generally describe the pattern(s) you observe.
+__a.__ Using the igraph library, plot the gene network. How many major gene clusters to you see? Generally describe the pattern(s) you observe.
 
-# __b.__ What is the average path distance in this small gene network?
+__b.__ What is the average path distance in this small gene network?
 
-# __c.__ What is the shortest pathway distance between Gene 6 and Gene 77? Graph it.
+__c.__ What is the shortest pathway distance between Gene 6 and Gene 77? Graph it.
 
-# __d.__ How dense is this network?
+__d.__ How dense is this network?
 
+load(final_network.RData)
